@@ -254,7 +254,7 @@
             <div class="hero-inner">
                 <div class="big-photo" id="hero-photo">
                     <!-- replace with your hero image -->
-                    <img src="assets/images/hero.jpg" alt="Hero photo">
+                    <img src="hero.jpg" alt="Hero photo">
                 </div>
 
                 <div class="subtitle">You are the warmest part of my world ❤️</div>
@@ -310,7 +310,7 @@
             const audio = document.createElement('audio');
             audio.id = 'bg-music';
             audio.loop = true;
-            audio.src = 'assets/music/song.mp3'; // change if needed
+            audio.src = 'song.mp3'; // change if needed
             audio.preload = 'auto';
             // don't auto-play loudly; start paused but allow play by user
             try {
@@ -348,7 +348,7 @@
         })();
     </script>
     <!-- Background music (same file on all pages) -->
-    <audio id="bg-audio" src="assets/audio/song.mp3" preload="auto" loop></audio>
+    <audio id="bg-audio" src="song.mp3" preload="auto" loop></audio>
 
     <!-- Floating play/pause control (shows if autoplay blocked) -->
     <button id="music-btn" class="music-control" aria-label="Play music" title="Play / Pause">
@@ -457,5 +457,6 @@
     </script>
 
 </body>
+
 
 </html>
