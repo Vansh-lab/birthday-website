@@ -1,0 +1,461 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Happy 19th — V❤️M</title>
+
+    <!-- confetti CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <style>
+         :root {
+            --bg1-start: #ffd1e8;
+            --bg1-end: #ffeaf4;
+            --accent: #ff5aa0;
+            --accent-2: #ff3d84;
+        }
+        
+        * {
+            box-sizing: border-box
+        }
+        
+        html,
+        body {
+            height: 100%
+        }
+        
+        body {
+            margin: 0;
+            font-family: "Poppins", sans-serif;
+            background: radial-gradient(900px 450px at 10% 10%, rgba(255, 40, 120, 0.03), transparent), linear-gradient(180deg, #0b0710, #120617 70%);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 28px;
+            overflow-x: hidden;
+        }
+        /* container */
+        
+        .wrap {
+            width: 100%;
+            max-width: 980px;
+            margin: 0 auto;
+            text-align: center;
+            position: relative;
+            z-index: 5;
+        }
+        /* top-left logo */
+        
+        .logo {
+            position: fixed;
+            left: 18px;
+            top: 16px;
+            background: linear-gradient(90deg, var(--accent), var(--accent-2));
+            color: white;
+            padding: 10px 14px;
+            border-radius: 999px;
+            font-weight: 800;
+            box-shadow: 0 8px 30px rgba(255, 60, 120, 0.08);
+            z-index: 40;
+        }
+        
+        h1.title {
+            margin: 0 0 10px;
+            color: var(--accent);
+            font-size: 26px;
+            letter-spacing: 0.2px;
+        }
+        
+        p.lead {
+            margin: 0 0 16px;
+            color: #f7cfe0;
+            opacity: 0.95;
+        }
+        /* hero card */
+        
+        .hero {
+            width: 520px;
+            max-width: 92vw;
+            border-radius: 18px;
+            margin: 18px auto 10px;
+            padding: 18px;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.006));
+            box-shadow: 0 22px 70px rgba(0, 0, 0, 0.6);
+            position: relative;
+            z-index: 10;
+        }
+        
+        .hero::after {
+            content: "";
+            position: absolute;
+            inset: 8px;
+            border-radius: 12px;
+            pointer-events: none;
+            box-shadow: 0 0 22px rgba(255, 60, 120, 0.03);
+            border: 2px solid rgba(255, 90, 140, 0.04);
+        }
+        
+        .hero-inner {
+            display: flex;
+            gap: 18px;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+        
+        .big-photo {
+            width: 320px;
+            height: 320px;
+            border-radius: 14px;
+            overflow: hidden;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.55);
+            border: 3px solid rgba(255, 90, 140, 0.06);
+            background: #1a1016;
+        }
+        
+        .big-photo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+            display: block;
+        }
+        /* small caption under hero */
+        
+        .subtitle {
+            margin-top: 10px;
+            color: #ffd6ea;
+            font-weight: 600;
+        }
+        /* start button */
+        
+        .btn-start {
+            margin-top: 14px;
+            background: linear-gradient(90deg, var(--accent), var(--accent-2));
+            color: white;
+            padding: 12px 22px;
+            border-radius: 999px;
+            font-weight: 800;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 14px 38px rgba(255, 60, 120, 0.08);
+        }
+        /* music toggle and small controls */
+        
+        .controls {
+            margin-top: 12px;
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+        }
+        
+        .small {
+            background: transparent;
+            color: #ffd6e8;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            padding: 8px 10px;
+            border-radius: 999px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+        /* bottom corner hearts */
+        
+        .corner-heart {
+            position: fixed;
+            bottom: 18px;
+            width: 80px;
+            height: 80px;
+            font-size: 46px;
+            opacity: 0.12;
+            pointer-events: none;
+            transform-origin: center;
+            filter: drop-shadow(0 8px 24px rgba(255, 40, 120, 0.06));
+            z-index: 6;
+            animation: pulseHeart 3.6s ease-in-out infinite;
+        }
+        
+        .corner-heart.right {
+            right: 18px;
+            transform: rotate(-6deg)
+        }
+        
+        .corner-heart.left {
+            left: 18px;
+            transform: rotate(6deg)
+        }
+        
+        @keyframes pulseHeart {
+            0% {
+                transform: scale(0.95);
+                opacity: 0.10
+            }
+            45% {
+                transform: scale(1.05);
+                opacity: 0.16
+            }
+            100% {
+                transform: scale(0.95);
+                opacity: 0.10
+            }
+        }
+        /* subtle bokeh orbs (generated by JS) */
+        
+        .bokeh-orb {
+            position: fixed;
+            border-radius: 50%;
+            pointer-events: none;
+            opacity: 0.06;
+            filter: blur(6px);
+            mix-blend-mode: screen;
+            z-index: 1;
+        }
+        /* footer tiny tip moved center */
+        
+        .tip {
+            position: fixed;
+            left: 50%;
+            transform: translateX(-50%);
+            bottom: 14px;
+            background: rgba(0, 0, 0, 0.44);
+            color: #cfe8d7;
+            padding: 8px 12px;
+            border-radius: 10px;
+            font-size: 12px;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.5);
+            z-index: 30;
+        }
+        
+        @media (max-width:560px) {
+            .hero {
+                padding: 14px;
+            }
+            .big-photo {
+                width: 86vw;
+                height: 86vw;
+                max-width: 360px;
+                max-height: 360px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="logo">V❤️M</div>
+
+    <div class="wrap">
+        <h1 class="title">Happy 19th Birthday, My Sunshine ✨</h1>
+        <p class="lead">A little secret website I made just for you — tap below to begin.</p>
+
+        <div class="hero" role="region" aria-label="Birthday hero">
+            <div class="hero-inner">
+                <div class="big-photo" id="hero-photo">
+                    <!-- replace with your hero image -->
+                    <img src="assets/images/hero.jpg" alt="Hero photo">
+                </div>
+
+                <div class="subtitle">You are the warmest part of my world ❤️</div>
+
+                <div class="controls">
+                    <button class="btn-start" id="start-btn">Tap to Begin the Magic 💖</button>
+                    <button class="small" id="music-toggle">🔊 Music</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-note" style="color:#eabed2; margin-top:8px;">(There is a surprise at the end — follow the pages)</div>
+    </div>
+
+    <!-- decorative bokeh orbs will be generated by JS -->
+    <div class="corner-heart left" aria-hidden="true">💗</div>
+    <div class="corner-heart right" aria-hidden="true">💗</div>
+
+    <div class="tip">Tip: Use the button to start — then click/tap to navigate pages.</div>
+
+    <script>
+        (function() {
+            // background bokeh orbs
+            (function createBokeh() {
+                const colors = ['#ff8fc7', '#ffd1e8', '#ffa4d6', '#ffb3c9'];
+                const count = 8;
+                for (let i = 0; i < count; i++) {
+                    const o = document.createElement('div');
+                    o.className = 'bokeh-orb';
+                    const size = 30 + Math.random() * 120;
+                    o.style.width = size + 'px';
+                    o.style.height = size + 'px';
+                    o.style.background = colors[Math.floor(Math.random() * colors.length)];
+                    // random edge placement
+                    if (Math.random() > 0.5) {
+                        o.style.left = (4 + Math.random() * 6) + '%';
+                    } else {
+                        o.style.right = (4 + Math.random() * 6) + '%';
+                    }
+                    o.style.top = (6 + Math.random() * 82) + '%';
+                    const dur = 6 + Math.random() * 8;
+                    o.style.animation = 'bokehFloat ' + dur + 's linear infinite';
+                    o.style.opacity = 0.02 + Math.random() * 0.08;
+                    document.body.appendChild(o);
+                }
+                const style = document.createElement('style');
+                style.innerHTML = '@keyframes bokehFloat { 0%{ transform:translateY(0)} 50%{transform:translateY(-14px)} 100%{transform:translateY(0)} }';
+                document.head.appendChild(style);
+            })();
+
+            // music toggle (controls audio with id bg-music if present)
+            const musicToggle = document.getElementById('music-toggle');
+            const audio = document.createElement('audio');
+            audio.id = 'bg-music';
+            audio.loop = true;
+            audio.src = 'assets/music/song.mp3'; // change if needed
+            audio.preload = 'auto';
+            // don't auto-play loudly; start paused but allow play by user
+            try {
+                document.body.appendChild(audio);
+            } catch (e) {}
+
+            musicToggle.addEventListener('click', () => {
+                if (audio.paused) {
+                    audio.play().catch(() => {});
+                    musicToggle.textContent = '🔊 Music';
+                } else {
+                    audio.pause();
+                    musicToggle.textContent = '🔈 Paused';
+                }
+            });
+
+            // start button: confetti + navigate to page2
+            document.getElementById('start-btn').addEventListener('click', (e) => {
+                e.preventDefault();
+                try {
+                    confetti({
+                        particleCount: 90,
+                        spread: 70,
+                        origin: {
+                            y: 0.6
+                        }
+                    });
+                } catch (err) {}
+                setTimeout(() => window.location.href = 'page2.html', 900);
+            });
+
+            // small helper: ensure hero photo not draggable
+            document.querySelectorAll('img').forEach(img => img.setAttribute('draggable', 'false'));
+
+        })();
+    </script>
+    <!-- Background music (same file on all pages) -->
+    <audio id="bg-audio" src="assets/audio/song.mp3" preload="auto" loop></audio>
+
+    <!-- Floating play/pause control (shows if autoplay blocked) -->
+    <button id="music-btn" class="music-control" aria-label="Play music" title="Play / Pause">
+  <!-- default icon is Play; JS will toggle innerHTML to Pause when playing -->
+  <svg viewBox="0 0 24 24" id="music-icon"><path d="M8 5v14l11-7z"/></svg>
+</button>
+
+
+    <script>
+        (function() {
+            const audio = document.getElementById('bg-audio');
+            const btn = document.getElementById('music-btn');
+            const icon = document.getElementById('music-icon');
+
+            // small helpers to switch icons
+            function setPlayingUI(isPlaying) {
+                if (isPlaying) {
+                    btn.classList.add('playing');
+                    // pause icon
+                    icon.innerHTML = '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>';
+                    btn.setAttribute('aria-label', 'Pause music');
+                    btn.title = 'Pause';
+                } else {
+                    btn.classList.remove('playing');
+                    // play icon
+                    icon.innerHTML = '<path d="M8 5v14l11-7z"/>';
+                    btn.setAttribute('aria-label', 'Play music');
+                    btn.title = 'Play';
+                }
+            }
+
+            // Try autoplay once page loads
+            function tryAutoplay() {
+                if (!audio) return;
+                // browsers may require a user gesture. try play; if rejected, show button
+                const p = audio.play();
+                if (p !== undefined) {
+                    p.then(() => {
+                        // autoplay succeeded
+                        setPlayingUI(true);
+                    }).catch(() => {
+                        // autoplay failed -> show control in paused state so user can start
+                        setPlayingUI(false);
+                        btn.classList.remove('hidden'); // ensure visible
+                    });
+                } else {
+                    // older browsers - set UI paused
+                    setPlayingUI(false);
+                    btn.classList.remove('hidden');
+                }
+            }
+
+            // initial: hide control until we know autoplay blocked; but keep it visible for safety on mobile
+            btn.classList.add('hidden');
+
+            // ensure audio is muted briefly to allow autoplay on some browsers (optional)
+            // We'll not force-muted; we tried autoplay already.
+
+            // click toggles play/pause and stores state in localStorage so subsequent pages can start similarly
+            btn.addEventListener('click', function(e) {
+                e.preventDefault();
+                if (audio.paused) {
+                    audio.play().then(() => {
+                        setPlayingUI(true);
+                        try {
+                            localStorage.setItem('bg_music_playing', '1');
+                        } catch (e) {}
+                    }).catch(() => {
+                        // user gesture required; still set UI
+                        setPlayingUI(false);
+                    });
+                } else {
+                    audio.pause();
+                    setPlayingUI(false);
+                    try {
+                        localStorage.setItem('bg_music_playing', '0');
+                    } catch (e) {}
+                }
+            });
+
+            // on page load, try autoplay
+            window.addEventListener('load', function() {
+                tryAutoplay();
+                // if localStorage says user previously wanted music on, attempt to play (useful across pages)
+                try {
+                    const prev = localStorage.getItem('bg_music_playing');
+                    if (prev === '1') {
+                        // show the button immediately and try play
+                        btn.classList.remove('hidden');
+                        audio.play().then(() => setPlayingUI(true)).catch(() => setPlayingUI(false));
+                    } else if (prev === '0') {
+                        // keep paused state but show button so user can start
+                        btn.classList.remove('hidden');
+                        setPlayingUI(false);
+                    } else {
+                        // no previous preference - keep button hidden if autoplay succeeded, otherwise shown in tryAutoplay catch
+                    }
+                } catch (e) {}
+            });
+
+            // if audio ends or errors, fallback UI
+            audio.addEventListener('ended', () => setPlayingUI(false));
+            audio.addEventListener('pause', () => setPlayingUI(false));
+            audio.addEventListener('play', () => setPlayingUI(true));
+        })();
+    </script>
+
+</body>
+
+</html>

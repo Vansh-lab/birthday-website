@@ -1,0 +1,1080 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Page 2 — Photos & Shayari (Birthday Style)</title>
+
+    <!-- confetti CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <style>
+         :root {
+            --card-w: 360px;
+            --card-h: 440px;
+            --img-h: calc(var(--card-h) - 150px);
+            --accent: #ff5aa0;
+            --accent-2: #ff3d84;
+            --bg-dark: #0c0610;
+        }
+        
+        * {
+            box-sizing: border-box
+        }
+        
+        html,
+        body {
+            height: 100%
+        }
+        
+        body {
+            margin: 0;
+            font-family: "Poppins", sans-serif;
+            background: radial-gradient(900px 350px at 8% 12%, rgba(255, 40, 120, 0.03), transparent), linear-gradient(180deg, #0b0710, #120617 74%);
+            color: #fff;
+            padding: 28px;
+            overflow-x: hidden;
+        }
+        
+        .logo {
+            position: fixed;
+            left: 16px;
+            top: 16px;
+            background: linear-gradient(90deg, var(--accent), var(--accent-2));
+            padding: 8px 12px;
+            border-radius: 999px;
+            color: #fff;
+            font-weight: 800;
+            z-index: 40;
+            box-shadow: 0 12px 40px rgba(255, 60, 120, 0.06);
+        }
+        /* center column layout */
+        
+        .page-center {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: calc(100vh - 56px);
+            width: 100%;
+            position: relative;
+            z-index: 5;
+        }
+        
+        .col {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+            width: 100%;
+            max-width: 1100px;
+            padding: 12px;
+        }
+        
+        h1.title {
+            color: var(--accent);
+            margin: 0 0 6px;
+            font-size: 24px;
+            text-align: center;
+        }
+        /* CARD WRAP - now relative so balloons can be absolutely positioned to the right */
+        
+        .card-wrap {
+            display: flex;
+            gap: 28px;
+            align-items: flex-start;
+            width: 100%;
+            justify-content: center;
+            position: relative;
+            /* important */
+        }
+        
+        .card {
+            width: var(--card-w);
+            height: var(--card-h);
+            border-radius: 18px;
+            padding: 8px;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.006), rgba(255, 255, 255, 0.002));
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.65);
+            position: relative;
+            overflow: visible;
+            z-index: 10;
+        }
+        
+        .card::after {
+            content: "";
+            position: absolute;
+            inset: 6px;
+            border-radius: 14px;
+            pointer-events: none;
+            border: 2px solid rgba(255, 90, 140, 0.04);
+            box-shadow: 0 10px 40px rgba(255, 40, 120, 0.03);
+        }
+        /* slideshow inside */
+        
+        .slideshow {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .slide {
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            transform: translateY(8px) scale(.99);
+            transition: transform .42s, opacity .36s;
+            pointer-events: none;
+        }
+        
+        .slide.active {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+            pointer-events: auto;
+            z-index: 8;
+        }
+        
+        .img-wrap {
+            position: absolute;
+            left: 6px;
+            right: 6px;
+            top: 6px;
+            height: var(--img-h);
+            overflow: hidden;
+            border-radius: 12px;
+        }
+        
+        .img-wrap img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+            border-radius: 10px;
+            transition: transform 10s linear;
+        }
+        
+        .slide.active .img-wrap img {
+            transform: scale(1.03);
+        }
+        /* typed shayari area (multi-line) */
+        
+        .shayari {
+            position: absolute;
+            left: 12px;
+            right: 12px;
+            bottom: 12px;
+            height: 120px;
+            border-radius: 12px;
+            padding: 12px 14px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 6px;
+            align-items: center;
+            background: linear-gradient(180deg, rgba(12, 6, 12, 0.86), rgba(12, 6, 12, 0.36));
+            backdrop-filter: blur(6px);
+            z-index: 12;
+            box-shadow: 0 8px 18px rgba(0, 0, 0, 0.45);
+            pointer-events: none;
+        }
+        
+        .shayari-line {
+            color: #ffd8ea;
+            font-size: 16px;
+            margin: 0;
+            text-align: center;
+            line-height: 1.25;
+            white-space: nowrap;
+            overflow: hidden;
+        }
+        
+        .shayari-line.small {
+            font-size: 13px;
+            color: #e6cfe0;
+            opacity: 0.95;
+        }
+        /* arrows */
+        
+        .arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 42px;
+            height: 42px;
+            border-radius: 999px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(0, 0, 0, 0.12));
+            box-shadow: 0 8px 22px rgba(0, 0, 0, 0.45);
+            color: white;
+            opacity: 0;
+            transition: opacity .18s;
+            cursor: pointer;
+            z-index: 20;
+        }
+        
+        .card:hover .arrow {
+            opacity: 1;
+        }
+        
+        .arrow.left {
+            left: 8px
+        }
+        
+        .arrow.right {
+            right: 8px
+        }
+        
+        .click-zone {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 50%;
+            z-index: 18;
+            cursor: pointer;
+        }
+        
+        .click-zone.left {
+            left: 0
+        }
+        
+        .click-zone.right {
+            right: 0
+        }
+        /* controls under card */
+        
+        .controls {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            width: var(--card-w);
+        }
+        
+        .progress {
+            width: calc(var(--card-w) - 20px);
+            height: 8px;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.03);
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .progress>i {
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 0%;
+            background: linear-gradient(90deg, var(--accent), var(--accent-2));
+            transition: width .36s;
+            display: block;
+            height: 8px;
+        }
+        
+        .dots {
+            display: flex;
+            gap: 8px;
+            margin-top: 6px;
+        }
+        
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.12);
+            box-shadow: 0 6px 14px rgba(0, 0, 0, 0.4);
+            transition: transform .18s, background .18s;
+        }
+        
+        .dot.active {
+            background: linear-gradient(90deg, var(--accent), var(--accent-2));
+            transform: scale(1.25);
+        }
+        
+        .footer {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+        }
+        
+        .btn {
+            padding: 10px 16px;
+            border-radius: 999px;
+            background: linear-gradient(90deg, var(--accent), var(--accent-2));
+            border: none;
+            color: #fff;
+            font-weight: 700;
+            cursor: pointer;
+        }
+        /* RIGHT SIDE: Balloon cluster decoration now absolutely positioned to the right of the card */
+        
+        .balloons {
+            position: absolute;
+            left: calc(50% + var(--card-w) / 2 + 56px);
+            /* absolute placement: right of the centered card */
+            top: 50%;
+            transform: translateY(-50%);
+            width: 220px;
+            height: var(--card-h);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 8;
+            pointer-events: none;
+        }
+        
+        .balloon {
+            position: absolute;
+            bottom: 20px;
+            width: 56px;
+            height: 76px;
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+            background: radial-gradient(circle at 35% 25%, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.05)), linear-gradient(180deg, #ff8fc7, #ff4a9b);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+            transform-origin: bottom center;
+            animation: floaty 6s ease-in-out infinite;
+            opacity: 0.95;
+        }
+        
+        .balloon.lg {
+            width: 72px;
+            height: 96px;
+        }
+        
+        .balloon.x {
+            left: 36px;
+            animation-delay: -2s;
+            background: linear-gradient(180deg, #ffd1e8, #ff7db1);
+        }
+        
+        .balloon.y {
+            left: 104px;
+            animation-delay: -1s;
+            background: linear-gradient(180deg, #ffb3c9, #ff5aa0);
+        }
+        
+        .balloon.z {
+            left: 170px;
+            animation-delay: -3s;
+            background: linear-gradient(180deg, #ff9acb, #ff3d84);
+        }
+        
+        .string {
+            position: absolute;
+            bottom: -18px;
+            left: 50%;
+            width: 2px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.12);
+            transform: translateX(-50%);
+            border-radius: 1px;
+        }
+        
+        @keyframes floaty {
+            0% {
+                transform: translateY(0) rotate(-2deg);
+            }
+            50% {
+                transform: translateY(-28px) rotate(3deg);
+            }
+            100% {
+                transform: translateY(0) rotate(-2deg);
+            }
+        }
+        /* POPPER on bottom-left */
+        
+        .popper {
+            position: fixed;
+            left: 18px;
+            bottom: 18px;
+            width: 84px;
+            height: 84px;
+            border-radius: 14px;
+            background: linear-gradient(180deg, #2b0b16, #3a0f21);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 28;
+            box-shadow: 0 12px 42px rgba(255, 20, 120, 0.03);
+            pointer-events: auto;
+            cursor: pointer;
+        }
+        
+        .popper:active {
+            transform: translateY(2px) scale(.98);
+            transition: transform .08s;
+        }
+        
+        .popper .icon {
+            font-size: 36px;
+        }
+        /* very light ongoing confetti (background) - small pieces */
+        
+        .confetti-piece {
+            position: fixed;
+            width: 8px;
+            height: 14px;
+            background: linear-gradient(90deg, #ff9abf, #ffd1e8);
+            opacity: 0.08;
+            z-index: 2;
+            pointer-events: none;
+            transform-origin: center;
+            animation: drift 7s linear infinite;
+        }
+        
+        @keyframes drift {
+            0% {
+                transform: translateY(-8px) rotate(0deg);
+                opacity: 0.06;
+            }
+            50% {
+                transform: translateY(28px) rotate(45deg);
+                opacity: 0.12;
+            }
+            100% {
+                transform: translateY(-8px) rotate(0deg);
+                opacity: 0.06;
+            }
+        }
+        /* bottom center tip */
+        
+        .tip {
+            position: fixed;
+            left: 50%;
+            transform: translateX(-50%);
+            bottom: 14px;
+            background: rgba(0, 0, 0, 0.44);
+            color: #cfe8d7;
+            padding: 8px 12px;
+            border-radius: 10px;
+            font-size: 13px;
+            z-index: 30;
+        }
+        /* responsive adjustments */
+        
+        @media (max-width:980px) {
+            .card-wrap {
+                flex-direction: column;
+                align-items: center;
+                gap: 18px;
+            }
+            .balloons {
+                display: none;
+            }
+             :root {
+                --card-w: 320px;
+                --card-h: 420px;
+                --img-h: calc(var(--card-h) - 150px);
+            }
+        }
+        
+        @media (max-width:520px) {
+             :root {
+                --card-w: 300px;
+                --card-h: 380px;
+                --img-h: calc(var(--card-h) - 140px);
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="logo">V❤️M</div>
+
+    <div class="page-center" role="main">
+        <div class="col">
+
+            <h1 class="title">Photos & Shayari — Birthday Edition 🎂</h1>
+
+            <div class="card-wrap">
+                <div class="card neon" id="card">
+                    <div class="slideshow" id="slideshow">
+                        <!-- Slide 1 -->
+                        <div class="slide" data-index="0">
+                            <div class="img-wrap"><img src="assets/images/pic1.jpg" alt="pic1" draggable="false"></div>
+                        </div>
+                        <!-- Slide 2 -->
+                        <div class="slide" data-index="1">
+                            <div class="img-wrap"><img src="assets/images/pic2.jpg" alt="pic2" draggable="false"></div>
+                        </div>
+                        <!-- Slide 3 -->
+                        <div class="slide" data-index="2">
+                            <div class="img-wrap"><img src="assets/images/pic3.jpg" alt="pic3" draggable="false"></div>
+                        </div>
+
+                        <!-- arrows -->
+                        <button class="arrow left" id="arrow-left" aria-label="Previous slide">◀</button>
+                        <button class="arrow right" id="arrow-right" aria-label="Next slide">▶</button>
+
+                        <!-- click zones -->
+                        <div class="click-zone left" id="left-zone" aria-hidden="true"></div>
+                        <div class="click-zone right" id="right-zone" aria-hidden="true"></div>
+
+                        <!-- typed shayari area (JS populates lines) -->
+                        <div class="shayari" id="shayari" aria-live="polite">
+                            <div class="shayari-line" id="line1">&nbsp;</div>
+                            <div class="shayari-line" id="line2">&nbsp;</div>
+                            <div class="shayari-line small" id="line3">&nbsp;</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- right decoration: balloons placed absolutely to the right of the centered card -->
+                <div class="balloons" aria-hidden="true" id="balloons">
+                    <div class="balloon x">
+                        <div class="string"></div>
+                    </div>
+                    <div class="balloon y lg">
+                        <div class="string"></div>
+                    </div>
+                    <div class="balloon z">
+                        <div class="string"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- controls under card -->
+            <div class="controls" aria-hidden="true">
+                <div class="progress"><i id="progress-bar"></i></div>
+                <div class="dots" id="dots"></div>
+                <div class="footer">
+                    <button class="btn" id="home-btn">Back to Home</button>
+                    <button class="btn" id="next-btn">Next →</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- popper bottom-left - clickable to trigger lateral confetti burst -->
+    <div class="popper" id="popper" title="Pop!">
+        <div class="icon">🎉</div>
+    </div>
+
+    <div class="tip" id="tip">Tip: click/tap left or right side — ← / → keys or swipe.</div>
+
+    <script>
+        (function() {
+            // slideshow elements & basics
+            const slides = Array.from(document.querySelectorAll('.slide'));
+            const leftZone = document.getElementById('left-zone');
+            const rightZone = document.getElementById('right-zone');
+            const arrowL = document.getElementById('arrow-left');
+            const arrowR = document.getElementById('arrow-right');
+            const dotsRoot = document.getElementById('dots');
+            const progressBar = document.getElementById('progress-bar');
+            const homeBtn = document.getElementById('home-btn');
+            const nextBtn = document.getElementById('next-btn');
+            const popper = document.getElementById('popper');
+            const shayariBox = document.getElementById('shayari');
+            const lineEls = [document.getElementById('line1'), document.getElementById('line2'), document.getElementById('line3')];
+
+            let current = 0;
+            const total = slides.length;
+            let touchStartX = null;
+            let typingTimer = null;
+
+            // Example shayari — arrays of lines (you can edit these)
+            const shayarLines = [
+                ["Hariyaan mein khili ek gulab si lagti ho,", "dil ke kone mein bikhri ek dhoop si"],
+                ["Haathon mein tera haath, safar chal mere saath", "choti-choti baatein, lamhon ki raat"],
+                ["Khushiyon ki baarish, har pal tera intezaar", "aaj teri muskurahat, mere liye tyohar"]
+            ];
+
+            while (shayarLines.length < total) shayarLines.push(["/* add your line */", " ", "00/00/0000"]);
+
+            function showSlide(idx) {
+                clearTyping();
+                slides.forEach((s, i) => s.classList.toggle('active', i === idx));
+                updateDots(idx);
+                updateProgress(idx);
+                typeShayariForSlide(idx);
+                if (idx === total - 1) {
+                    setTimeout(() => {
+                        try {
+                            confetti({
+                                particleCount: 40,
+                                spread: 60,
+                                origin: {
+                                    x: 0.5,
+                                    y: 0.6
+                                }
+                            });
+                        } catch (e) {}
+                    }, 260);
+                }
+            }
+
+            function nextSlide() {
+                if (current < total - 1) {
+                    current++;
+                    showSlide(current);
+                }
+            }
+
+            function prevSlide() {
+                if (current > 0) {
+                    current--;
+                    showSlide(current);
+                }
+            }
+
+            // dot build/upd/progress
+            function buildDots() {
+                dotsRoot.innerHTML = "";
+                for (let i = 0; i < total; i++) {
+                    const d = document.createElement('div');
+                    d.className = 'dot' + (i === current ? ' active' : '');
+                    d.dataset.index = i;
+                    d.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        current = Number(e.target.dataset.index);
+                        showSlide(current);
+                    });
+                    dotsRoot.appendChild(d);
+                }
+            }
+
+            function updateDots(idx) {
+                const dots = Array.from(dotsRoot.children);
+                dots.forEach((d, i) => d.classList.toggle('active', i === idx));
+            }
+
+            function updateProgress(idx) {
+                const pct = total > 1 ? Math.round(((idx) / (total - 1)) * 100) : 0;
+                progressBar.style.width = pct + '%';
+            }
+
+            // nav handlers
+            rightZone.addEventListener('click', (e) => {
+                e.stopPropagation();
+                nextSlide();
+            });
+            leftZone.addEventListener('click', (e) => {
+                e.stopPropagation();
+                prevSlide();
+            });
+            arrowR.addEventListener('click', (e) => {
+                e.stopPropagation();
+                e.preventDefault();
+                nextSlide();
+            });
+            arrowL.addEventListener('click', (e) => {
+                e.stopPropagation();
+                e.preventDefault();
+                prevSlide();
+            });
+
+            window.addEventListener('keydown', (e) => {
+                if (e.key === 'ArrowRight') {
+                    e.preventDefault();
+                    nextSlide();
+                }
+                if (e.key === 'ArrowLeft') {
+                    e.preventDefault();
+                    prevSlide();
+                }
+            });
+
+            const card = document.getElementById('card');
+            // touch/swipe
+            card.addEventListener('touchstart', (e) => {
+                if (e.touches.length === 1) touchStartX = e.touches[0].clientX;
+            }, {
+                passive: true
+            });
+            card.addEventListener('touchend', (e) => {
+                if (touchStartX === null) return;
+                const touchEndX = e.changedTouches[0].clientX;
+                const diff = touchEndX - touchStartX;
+                if (Math.abs(diff) > 40) {
+                    if (diff < 0) nextSlide();
+                    else prevSlide();
+                } else {
+                    const rect = card.getBoundingClientRect();
+                    const x = touchEndX - rect.left;
+                    if (x > rect.width / 2) nextSlide();
+                    else prevSlide();
+                }
+                touchStartX = null;
+            }, {
+                passive: true
+            });
+
+            card.addEventListener('click', (e) => {
+                if (e.target.closest('.dot') || e.target.closest('.arrow')) return;
+                const rect = card.getBoundingClientRect();
+                if (e.clientX - rect.left > rect.width / 2) nextSlide();
+                else prevSlide();
+            });
+
+            homeBtn.addEventListener('click', () => window.location.href = 'index.html');
+            nextBtn.addEventListener('click', () => window.location.href = 'page3.html');
+
+            // SHAYARI TYPER
+            function typeShayariForSlide(idx) {
+                const lines = shayarLines[idx] || ["...", " ", " "];
+                let lineIndex = 0;
+                let wordIndex = 0;
+                lineEls.forEach(el => el.textContent = '');
+
+                function typeNextWord() {
+                    if (lineIndex >= lines.length) {
+                        typingTimer = null;
+                        return;
+                    }
+                    const words = String(lines[lineIndex]).split(' ');
+                    if (wordIndex < words.length) {
+                        const cur = lineEls[lineIndex].textContent;
+                        lineEls[lineIndex].textContent = (cur ? cur + ' ' : '') + words[wordIndex];
+                        wordIndex++;
+                        typingTimer = setTimeout(typeNextWord, 280);
+                    } else {
+                        wordIndex = 0;
+                        lineIndex++;
+                        typingTimer = setTimeout(typeNextWord, 420);
+                    }
+                }
+                typeNextWord();
+            }
+
+            function clearTyping() {
+                if (typingTimer) {
+                    clearTimeout(typingTimer);
+                    typingTimer = null;
+                }
+                lineEls.forEach(el => el.textContent = '');
+            }
+
+            // POPPER confetti: compute origin from popper and angle toward card center (stronger velocity)
+            function popperBurstDirectional() {
+                try {
+                    const popRect = popper.getBoundingClientRect();
+                    const popCenterX = popRect.left + popRect.width / 2;
+                    const popCenterY = popRect.top + popRect.height / 2;
+                    const cardRect = card.getBoundingClientRect();
+                    const cardCenterX = cardRect.left + cardRect.width / 2;
+                    const cardCenterY = cardRect.top + cardRect.height / 2;
+
+                    // convert to origin fractional coords
+                    const origin = {
+                        x: popCenterX / window.innerWidth,
+                        y: popCenterY / window.innerHeight
+                    };
+
+                    // compute angle in degrees for confetti: confetti angle uses 90=up, 0=right.
+                    const dx = cardCenterX - popCenterX;
+                    const dy = cardCenterY - popCenterY;
+                    // atan2 takes (y,x); we need angle where up=90, so compute as below:
+                    const angleRad = Math.atan2(-dy, dx); // negative dy so upward is positive angle
+                    const angleDeg = angleRad * 180 / Math.PI;
+
+                    // layered, stronger bursts aimed to the card center
+                    confetti({
+                        particleCount: 110,
+                        angle: Math.round(angleDeg),
+                        spread: 48,
+                        startVelocity: 88,
+                        gravity: 0.6,
+                        origin: origin
+                    });
+                    confetti({
+                        particleCount: 70,
+                        angle: Math.round(angleDeg - 8),
+                        spread: 70,
+                        startVelocity: 62,
+                        gravity: 0.78,
+                        origin: origin
+                    });
+                    // small close sprinkle
+                    confetti({
+                        particleCount: 36,
+                        angle: Math.round(angleDeg + 18),
+                        spread: 28,
+                        startVelocity: 44,
+                        gravity: 0.48,
+                        origin: {
+                            x: Math.max(0.01, origin.x - 0.01),
+                            y: Math.min(0.98, origin.y + 0.04)
+                        },
+                        scalar: 0.8
+                    });
+                } catch (e) {
+                    // confetti library might be absent — ignore silently
+                    console.warn("confetti failed", e);
+                }
+            }
+
+            popper.addEventListener('click', (e) => {
+                e.stopPropagation();
+                // little pop animation
+                popper.classList.add('popped');
+                setTimeout(() => popper.classList.remove('popped'), 160);
+                popperBurstAnimation(); // visual pop
+                popperBurstDirectional();
+            });
+
+            // small visual animation for the popper when clicked (CSS-free JS "flash")
+            function popperBurstAnimation() {
+                popper.style.transform = 'scale(0.98)';
+                setTimeout(() => popper.style.transform = '', 140);
+            }
+
+            // lightweight drifting confetti (decorative)
+            (function createDriftConfetti() {
+                const count = 8;
+                const colors = ['#ff9abf', '#ffd1e8', '#ffa4d6', '#ffb3c9'];
+                for (let i = 0; i < count; i++) {
+                    const p = document.createElement('div');
+                    p.className = 'confetti-piece';
+                    p.style.left = (10 + Math.random() * 80) + '%';
+                    p.style.top = (10 + Math.random() * 60) + '%';
+                    p.style.background = colors[Math.floor(Math.random() * colors.length)];
+                    p.style.animationDuration = (6 + Math.random() * 6) + 's';
+                    p.style.opacity = 0.02 + Math.random() * 0.08;
+                    document.body.appendChild(p);
+                }
+            })();
+
+            // bokeh orbs around borders
+            (function createBokeh() {
+                const colors = ['#ff8fc7', '#ffd1e8', '#ffa4d6', '#ffb3c9'];
+                const count = 6;
+                for (let i = 0; i < count; i++) {
+                    const o = document.createElement('div');
+                    o.className = 'bokeh-orb';
+                    const size = 30 + Math.random() * 90;
+                    o.style.width = size + 'px';
+                    o.style.height = size + 'px';
+                    o.style.background = colors[Math.floor(Math.random() * colors.length)];
+                    if (Math.random() > 0.4) o.style.right = (4 + Math.random() * 6) + '%';
+                    else o.style.left = (4 + Math.random() * 6) + '%';
+                    o.style.top = (6 + Math.random() * 82) + '%';
+                    const dur = 6 + Math.random() * 8;
+                    o.style.animation = 'bokehFloat ' + dur + 's linear infinite';
+                    o.style.opacity = 0.02 + Math.random() * 0.06;
+                    document.body.appendChild(o);
+                }
+                const style = document.createElement('style');
+                style.innerHTML = '@keyframes bokehFloat { 0%{ transform:translateY(0)} 50%{transform:translateY(-14px)} 100%{transform:translateY(0)} }';
+                document.head.appendChild(style);
+            })();
+
+            // small orbit hearts around the card
+            (function createOrbitHeartsSmall() {
+                const container = document.createElement('div');
+                container.style.position = 'absolute';
+                container.style.inset = '0';
+                container.style.pointerEvents = 'none';
+                container.style.zIndex = 9;
+                document.getElementById('card').appendChild(container);
+                const count = 8;
+                const r = Math.max(document.getElementById('card').offsetWidth, document.getElementById('card').offsetHeight) / 2 + 8;
+                for (let i = 0; i < count; i++) {
+                    const h = document.createElement('div');
+                    h.className = 'orbit-heart';
+                    h.innerHTML = '💞';
+                    h.style.position = 'absolute';
+                    h.style.fontSize = (8 + Math.random() * 8) + 'px';
+                    h.style.opacity = 0.85;
+                    const dur = 12 + Math.random() * 14;
+                    h.style.animation = `orbitSmall ${dur}s linear ${-Math.random()*dur}s infinite`;
+                    const left = 50 + Math.cos((i / count) * Math.PI * 2) * (r / 2);
+                    const top = 50 + Math.sin((i / count) * Math.PI * 2) * (r / 3);
+                    h.style.left = left + '%';
+                    h.style.top = top + '%';
+                    container.appendChild(h);
+                }
+                const style = document.createElement('style');
+                style.innerHTML = `@keyframes orbitSmall { from { transform: rotate(0deg) translateX(0) } to { transform: rotate(360deg) translateX(0) } }`;
+                document.head.appendChild(style);
+            })();
+
+            // INIT
+            function init() {
+                buildDots();
+                showSlide(current);
+                updateProgress(current);
+            }
+
+            // existing dot/build/progress/type logic
+            function buildDots() {
+                dotsRoot.innerHTML = "";
+                for (let i = 0; i < total; i++) {
+                    const d = document.createElement('div');
+                    d.className = 'dot' + (i === current ? ' active' : '');
+                    d.dataset.index = i;
+                    d.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        current = Number(e.target.dataset.index);
+                        showSlide(current);
+                    });
+                    dotsRoot.appendChild(d);
+                }
+            }
+
+            function updateDots(idx) {
+                const dots = Array.from(dotsRoot.children);
+                dots.forEach((d, i) => d.classList.toggle('active', i === idx));
+            }
+
+            function updateProgress(idx) {
+                const pct = total > 1 ? Math.round(((idx) / (total - 1)) * 100) : 0;
+                progressBar.style.width = pct + '%';
+            }
+
+            function typeShayariForSlide(idx) {
+                const lines = shayarLines[idx] || ["...", " ", " "];
+                let lineIndex = 0;
+                let wordIndex = 0;
+                lineEls.forEach(el => el.textContent = '');
+
+                function typeNextWord() {
+                    if (lineIndex >= lines.length) {
+                        typingTimer = null;
+                        return;
+                    }
+                    const words = String(lines[lineIndex]).split(' ');
+                    if (wordIndex < words.length) {
+                        const cur = lineEls[lineIndex].textContent;
+                        lineEls[lineIndex].textContent = (cur ? cur + ' ' : '') + words[wordIndex];
+                        wordIndex++;
+                        typingTimer = setTimeout(typeNextWord, 280);
+                    } else {
+                        wordIndex = 0;
+                        lineIndex++;
+                        typingTimer = setTimeout(typeNextWord, 420);
+                    }
+                }
+                typeNextWord();
+            }
+
+            function clearTyping() {
+                if (typingTimer) {
+                    clearTimeout(typingTimer);
+                    typingTimer = null;
+                }
+                lineEls.forEach(el => el.textContent = '');
+            }
+
+            init();
+
+            document.querySelectorAll('img').forEach(i => i.setAttribute('draggable', 'false'));
+
+        })();
+    </script>
+    <!-- Background music (same file on all pages) -->
+    <audio id="bg-audio" src="assets/audio/song.mp3" preload="auto" loop></audio>
+
+    <!-- Floating play/pause control (shows if autoplay blocked) -->
+    <button id="music-btn" class="music-control" aria-label="Play music" title="Play / Pause">
+  <!-- default icon is Play; JS will toggle innerHTML to Pause when playing -->
+  <svg viewBox="0 0 24 24" id="music-icon"><path d="M8 5v14l11-7z"/></svg>
+</button>
+
+
+    <script>
+        (function() {
+            const audio = document.getElementById('bg-audio');
+            const btn = document.getElementById('music-btn');
+            const icon = document.getElementById('music-icon');
+
+            // small helpers to switch icons
+            function setPlayingUI(isPlaying) {
+                if (isPlaying) {
+                    btn.classList.add('playing');
+                    // pause icon
+                    icon.innerHTML = '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>';
+                    btn.setAttribute('aria-label', 'Pause music');
+                    btn.title = 'Pause';
+                } else {
+                    btn.classList.remove('playing');
+                    // play icon
+                    icon.innerHTML = '<path d="M8 5v14l11-7z"/>';
+                    btn.setAttribute('aria-label', 'Play music');
+                    btn.title = 'Play';
+                }
+            }
+
+            // Try autoplay once page loads
+            function tryAutoplay() {
+                if (!audio) return;
+                // browsers may require a user gesture. try play; if rejected, show button
+                const p = audio.play();
+                if (p !== undefined) {
+                    p.then(() => {
+                        // autoplay succeeded
+                        setPlayingUI(true);
+                    }).catch(() => {
+                        // autoplay failed -> show control in paused state so user can start
+                        setPlayingUI(false);
+                        btn.classList.remove('hidden'); // ensure visible
+                    });
+                } else {
+                    // older browsers - set UI paused
+                    setPlayingUI(false);
+                    btn.classList.remove('hidden');
+                }
+            }
+
+            // initial: hide control until we know autoplay blocked; but keep it visible for safety on mobile
+            btn.classList.add('hidden');
+
+            // ensure audio is muted briefly to allow autoplay on some browsers (optional)
+            // We'll not force-muted; we tried autoplay already.
+
+            // click toggles play/pause and stores state in localStorage so subsequent pages can start similarly
+            btn.addEventListener('click', function(e) {
+                e.preventDefault();
+                if (audio.paused) {
+                    audio.play().then(() => {
+                        setPlayingUI(true);
+                        try {
+                            localStorage.setItem('bg_music_playing', '1');
+                        } catch (e) {}
+                    }).catch(() => {
+                        // user gesture required; still set UI
+                        setPlayingUI(false);
+                    });
+                } else {
+                    audio.pause();
+                    setPlayingUI(false);
+                    try {
+                        localStorage.setItem('bg_music_playing', '0');
+                    } catch (e) {}
+                }
+            });
+
+            // on page load, try autoplay
+            window.addEventListener('load', function() {
+                tryAutoplay();
+                // if localStorage says user previously wanted music on, attempt to play (useful across pages)
+                try {
+                    const prev = localStorage.getItem('bg_music_playing');
+                    if (prev === '1') {
+                        // show the button immediately and try play
+                        btn.classList.remove('hidden');
+                        audio.play().then(() => setPlayingUI(true)).catch(() => setPlayingUI(false));
+                    } else if (prev === '0') {
+                        // keep paused state but show button so user can start
+                        btn.classList.remove('hidden');
+                        setPlayingUI(false);
+                    } else {
+                        // no previous preference - keep button hidden if autoplay succeeded, otherwise shown in tryAutoplay catch
+                    }
+                } catch (e) {}
+            });
+
+            // if audio ends or errors, fallback UI
+            audio.addEventListener('ended', () => setPlayingUI(false));
+            audio.addEventListener('pause', () => setPlayingUI(false));
+            audio.addEventListener('play', () => setPlayingUI(true));
+        })();
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,143 @@
+/* PAGE BACKGROUND */
+
+body {
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(135deg, #ffd1e8, #ffeaf4);
+    font-family: 'Poppins', sans-serif;
+    text-align: center;
+    overflow-x: hidden;
+}
+
+
+/* LOGO */
+
+.logo {
+    position: fixed;
+    top: 15px;
+    left: 15px;
+    background: #ff77b7;
+    padding: 10px 20px;
+    border-radius: 50px;
+    color: white;
+    font-weight: 700;
+    font-size: 20px;
+    box-shadow: 0 0 10px rgba(255, 50, 120, 0.4);
+}
+
+
+/* CONTENT */
+
+.container {
+    margin-top: 120px;
+}
+
+.title {
+    font-size: 35px;
+    color: #ff1e63;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+.subtitle {
+    font-size: 18px;
+    color: #ff4f87;
+    margin-bottom: 30px;
+}
+
+
+/* PHOTO */
+
+.photo-box img {
+    width: 260px;
+    border-radius: 20px;
+    border: 3px solid #ff8ab9;
+    box-shadow: 0 5px 20px rgba(255, 0, 100, 0.3);
+    margin-bottom: 30px;
+}
+
+
+/* BUTTON */
+
+.btn {
+    background: #ff1e63;
+    color: white;
+    padding: 14px 30px;
+    border-radius: 50px;
+    font-size: 18px;
+    border: none;
+    cursor: pointer;
+    transition: 0.3s;
+    box-shadow: 0 5px 15px rgba(255, 0, 77, 0.3);
+}
+
+.btn:hover {
+    transform: scale(1.05);
+}
+
+
+/* Music control (floating, small, matches pink theme) */
+
+.music-control {
+    position: fixed;
+    left: 18px;
+    bottom: 110px;
+    /* above popper/button */
+    width: 56px;
+    height: 56px;
+    border-radius: 999px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(90deg, #ff5aa0, #ff3d84);
+    box-shadow: 0 10px 30px rgba(255, 50, 120, 0.12);
+    z-index: 9999;
+    cursor: pointer;
+    user-select: none;
+}
+
+.music-control svg {
+    width: 22px;
+    height: 22px;
+    display: block;
+    color: #fff;
+    fill: #fff;
+}
+
+.music-control.paused {
+    filter: saturate(0.98) brightness(.98);
+    transform: translateY(0);
+}
+
+.music-control.hidden {
+    display: none;
+}
+
+
+/* small pulsing indicator when playing */
+
+.music-control.playing::after {
+    content: "";
+    position: absolute;
+    width: 56px;
+    height: 56px;
+    border-radius: 999px;
+    box-shadow: 0 0 0 6px rgba(255, 80, 140, 0.06);
+    animation: musicPulse 1.6s ease-out infinite;
+    z-index: -1;
+}
+
+@keyframes musicPulse {
+    0% {
+        transform: scale(1);
+        opacity: .28
+    }
+    70% {
+        transform: scale(1.28);
+        opacity: 0
+    }
+    100% {
+        transform: scale(1.28);
+        opacity: 0
+    }
+}
